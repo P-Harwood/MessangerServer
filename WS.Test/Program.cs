@@ -26,6 +26,8 @@ namespace WS.Test
 
         static async Task Main(string[] args)
         {
+
+            
             DataBase DBCon = new DataBase();
             HttpListener httpListener = new HttpListener();
             httpListener.Prefixes.Add(url);
@@ -38,14 +40,19 @@ namespace WS.Test
                 // Wait for an incoming request
                 HttpListenerContext context = await httpListener.GetContextAsync();
 
+                // Filters http Restful requests from websocket
                 if (context.Request.IsWebSocketRequest)
                 {
                     HttpListenerWebSocketContext wsContext = await context.AcceptWebSocketAsync(null);
-                    Console.WriteLine("Client connected.");
-                    _ = HandleWebSocketConnection(wsContext.WebSocket);
+                    
+                    Console.WriteLine("Client connected.");// Logs client connected
+
+
+                    _ = HandleWebSocketConnection(wsContext.WebSocket); // Sends handling of the new websocket connection to an async function in a while loop
                 }
                 else
                 {
+                    // If http packet is not websocket then process it in HTTPInbound
                     await HTTPInbound(context, DBCon);
                 }
             }
@@ -53,19 +60,28 @@ namespace WS.Test
 
 
 
-
+        // Handles HTTP requests which are not websocket
         private static async Task HTTPInbound(HttpListenerContext inboundMessage, DataBase DBCon)
         {
-            string httpMethod = inboundMessage.Request.HttpMethod.ToString();
-            string httpURL = inboundMessage.Request.Url.ToString();
+            
+            string httpMethod = inboundMessage.Request.HttpMethod.ToString();//Convert http method to string 
+            string httpURL = inboundMessage.Request.Url.ToString(); //Convert http message to string 
 
+
+
+            // Defines request body, it will be used in stream reader
             string requestBody;
             
+            // Use stream reader to read stream of body data, passed the stream and encoding 
             using (StreamReader reader = new StreamReader(inboundMessage.Request.InputStream, inboundMessage.Request.ContentEncoding))
             {
                 requestBody = await reader.ReadToEndAsync();
             }
+
+            // Log: Http request sent in
             Console.Write(httpURL);
+
+            //   TODO Kind of a crap option to be honest
             if (inboundMessage.Request.ContentType == "application/x-www-form-urlencoded")
             {
                 if (httpMethod == "PUT" && httpURL == url + "Register")
