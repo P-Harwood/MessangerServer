@@ -96,15 +96,12 @@ namespace WS.Test
         }
 
         // Method to register a new account
-        public async Task<JObject> RegisterAccount(string username, byte[] passwordHash, byte[] passwordSalt)
+        public async Task<JObject> CreateNewAccount(string username, byte[] passwordHash, byte[] passwordSalt)
         {
             
             Console.WriteLine(_connectionString);
             try
             {
-                bool accountExists = await CheckAccountExisting(username);
-                if (!accountExists)
-                {
                     // Use parameterized query to safely handle inputs
                     string query = "INSERT INTO users (username, userPasswordHash, userPasswordSalt) VALUES (@username, @passwordHash, @passwordSalt);";
 
@@ -125,12 +122,6 @@ namespace WS.Test
 
                     Console.WriteLine("Account registered successfully.");
                     return new JObject { ["Result"] = "OK" };
-                }
-                else
-                {
-                    Console.WriteLine("Account already exists.");
-                    return new JObject { ["Result"] = "Account exists" };
-                }
             }
             catch (Exception ex)
             {
@@ -144,10 +135,12 @@ namespace WS.Test
         }
 
 
-
+        // Gets all users from database, test fuction 
         public async Task<Dictionary<string, string>> ReturnAllUsers()
         {
+            // Ensure only user id and username are grabbed to prevent vulnerability
             string query = $"SELECT userid, username FROM users;";
+
             try
             {
                 var userDictionary = new Dictionary<string, string>();
@@ -184,82 +177,9 @@ namespace WS.Test
 
 
 
-        // Method for creating password Hash
-        public HashInformation generateHash(string password)
-        {
-            HashInformation returnInformation = new HashInformation
-            {
-                Result = "Unknown"
-            };
+        
 
-            try
-            {
-                // keysize is used for how manye bytes to create for the salt
-                const int keySize = 64;
-                const int iterations = 350000;
-
-                // Selects what hash algorithim i am going to use
-                var hashAlgorithm = HashAlgorithmName.SHA512;
-
-                // Generates a salt, GetBytes retuns an array of randomised bytes
-                byte[] salt = RandomNumberGenerator.GetBytes(keySize);
-
-                // Creates the hash and stores in hash variable
-                var hash = Rfc2898DeriveBytes.Pbkdf2(Encoding.UTF8.GetBytes(password), salt, iterations, hashAlgorithm, keySize);
-
-
-                // Creates success case object full of hash information
-                returnInformation = new HashInformation
-                {
-                    Result = "OK",
-                    PasswordHash = hash,
-                    PasswordSalt = salt,
-                };
-
-            }
-            catch (Exception ex)
-            {
-                //Log error which occured
-                Console.WriteLine("Error occured during creation of hash: ", ex);
-
-                // Error case for hash generation object is created
-                returnInformation = new HashInformation
-                {
-                    Result = "Error",
-                    ErrorMessage = ex.Message
-                };
-            }
-
-            //Creates a json of either the success or fail case of hashInformation and returns it
-            return returnInformation;
-
-        }
-
-        // Method for turning raw password into a hash
-        public bool checkHash(string password, byte[] salt, byte[] passwordHash)
-        {
-            // keysize is used for how manye bytes to create for the salt
-            const int keySize = 64;
-            const int iterations = 350000;
-
-            // Selects what hash algorithim i am going to use
-            var hashAlgorithm = HashAlgorithmName.SHA512;
-
-
-            Console.WriteLine("Password: "+ password);
-            var hash = Rfc2898DeriveBytes.Pbkdf2(Encoding.UTF8.GetBytes(password), salt, iterations, hashAlgorithm, keySize);
-
-
-            Console.WriteLine($"Password Hash (Hex): {BitConverter.ToString(hash).Replace("-", "")}");
-            Console.WriteLine($"Password Hash (Base64): {Convert.ToBase64String(hash)}");
-
-            Console.WriteLine($"paramater Password Hash (Hex): {BitConverter.ToString(passwordHash).Replace("-", "")}");
-            Console.WriteLine($"paramater Password Hash (Base64): {Convert.ToBase64String(passwordHash)}");
-
-            Console.WriteLine($"paramater Password salt (Hex): {BitConverter.ToString(salt).Replace("-", "")}");
-            Console.WriteLine($"paramater Password salt (Base64): {Convert.ToBase64String(salt)}");
-            return passwordHash.SequenceEqual(hash);
-        }
+        
 
 
 

@@ -58,7 +58,7 @@ namespace WS.Test.Scripts
 
                     return new CleanDetailsForm
                     {
-                        Result = "Error",
+                        Result = "Reject",
                         ErrorMessage = "Invalid Form Data"
                     };
                 }
@@ -67,7 +67,7 @@ namespace WS.Test.Scripts
                 {
                     return new CleanDetailsForm
                     {
-                        Result = "Error",
+                        Result = "Reject",
                         ErrorMessage = "Invalid form request. Username and password fields not present."
                     };
                 }
@@ -80,7 +80,7 @@ namespace WS.Test.Scripts
                 {
                     return new CleanDetailsForm
                     {
-                        Result = "Error",
+                        Result = "Reject",
                         ErrorMessage = "Username can only contain letters and numbers."
                     };
                 }
@@ -89,14 +89,14 @@ namespace WS.Test.Scripts
                 {
                     return new CleanDetailsForm
                     {
-                        Result = "Error",
+                        Result = "Reject",
                         ErrorMessage = "Usernames can not be more than 20 characters."
                     };
                 } else if (userN.Length < 3)
                 {
                     return new CleanDetailsForm
                     {
-                        Result = "Error",
+                        Result = "Reject",
                         ErrorMessage = "Usernames must be atleast 3 characters long."
                     };
                 }
@@ -108,7 +108,7 @@ namespace WS.Test.Scripts
 
                     return new CleanDetailsForm
                     {
-                        Result = "Error",
+                        Result = "Reject",
                         ErrorMessage = "Username or Password can not be empty."
                     };
                 }

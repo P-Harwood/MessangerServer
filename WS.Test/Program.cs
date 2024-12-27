@@ -86,7 +86,7 @@ namespace WS.Test
             {
                 if (httpMethod == "PUT" && httpURL == url + "Register")
                 {
-                    await HTTPMethods.RegisterAccount(requestBody, DBCon, inboundMessage);
+                    await HTTPMethods.ProcessAccountRegistration(requestBody, DBCon, inboundMessage);
 
                 } else if (httpMethod == "POST" && httpURL == url + "SignIn")
                 {
