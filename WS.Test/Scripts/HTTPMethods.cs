@@ -91,7 +91,7 @@ namespace WS.Test.Scripts
                 // returns a dictionary string string to collect all the  <userID, username> userid is string in this instance 
 
                 //TODO : investigate more appropriate response for having int string reponse
-                Dictionary<string, string> userData = await DBCon.ReturnAllUsers();
+                List<UserData> userData = await DBCon.ReturnAllUsers();
 
                 // Status code is ok and returns data fethced
                 response.StatusCode = (int)HttpStatusCode.OK;

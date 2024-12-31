@@ -136,14 +136,14 @@ namespace WS.Test
 
 
         // Gets all users from database, test fuction 
-        public async Task<Dictionary<string, string>> ReturnAllUsers()
+        public async Task<List<UserData>> ReturnAllUsers()
         {
             // Ensure only user id and username are grabbed to prevent vulnerability
-            string query = $"SELECT userid, username FROM users;";
+            string query = "SELECT userid, username FROM users;";
 
             try
             {
-                var userDictionary = new Dictionary<string, string>();
+                var users = new List<UserData>();
 
                 await using (var connection = new NpgsqlConnection(_connectionString))
                 {
@@ -154,16 +154,20 @@ namespace WS.Test
                         {
                             while (await reader.ReadAsync())
                             {
-                                // Add each user to the dictionary
-                                string userId = reader["userid"].ToString();
-                                string username = reader["username"].ToString();
-                                userDictionary[userId] = username;
+                                // Add each user to the list
+                                var user = new UserData
+                                {
+                                    Id = reader.GetInt32(reader.GetOrdinal("userid")),
+                                    Username = reader.GetString(reader.GetOrdinal("username"))
+                                };
+
+                                users.Add(user);
                             }
                         }
                     }
                 }
 
-                return userDictionary;
+                return users;
             }
             catch (Exception ex)
             {
@@ -177,9 +181,9 @@ namespace WS.Test
 
 
 
-        
 
-        
+
+
 
 
 

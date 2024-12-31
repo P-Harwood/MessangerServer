@@ -81,7 +81,7 @@ namespace WS.Test
             // Log: Http request sent in
             Console.Write(httpURL);
 
-            //   TODO Kind of a crap option to be honest
+            //   TODO Kind of a crap option to be honest change form encoded crap to something better
             if (inboundMessage.Request.ContentType == "application/x-www-form-urlencoded")
             {
                 if (httpMethod == "PUT" && httpURL == url + "Register")
@@ -94,8 +94,8 @@ namespace WS.Test
 
                 }
                 else if (httpMethod == "GET" && httpURL == url + "AddFriend")
-                {
-                    await HTTPMethods.SignIn(requestBody, DBCon, inboundMessage);
+                {// TODO implement add friend functionality
+                    await HTTPMethods.ReturnAll(requestBody, DBCon, inboundMessage);
 
                 }
 
