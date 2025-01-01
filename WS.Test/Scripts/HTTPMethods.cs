@@ -118,7 +118,46 @@ namespace WS.Test.Scripts
 
 
 
+        public static async Task CreateNewConversation(string requestBody, DataBase DBCon, HttpListenerContext context)
+        {
+            try
+            {
 
+
+                //TODO clean the ids, make sure they are real ids and that they are unique
+                // Prepare response
+                HttpListenerResponse response = context.Response;
+                response.ContentType = "application/json";
+
+                ConversationClass conversationObject = HTTPBodyExtractor.ParseConversationIDs(requestBody);
+
+                bool conversationExists = await DBCon.CheckConversationExists(conversationObject);
+
+                if (conversationExists)
+                {
+                    response.StatusCode = (int)HttpStatusCode.Conflict;
+                    await SendHttpResponse(response, new { message = "Conversation Already Exists" });
+                    return;
+                }
+                
+                JObject insertionStatus = await DBCon.AddNewConversation(conversationObject);
+
+
+                response.StatusCode = (int)HttpStatusCode.OK;
+                await SendHttpResponse(response, new { message = "Converesation Created" });
+                /*
+                if (insertionStatus.Result == "OK")
+                {
+                }
+                */
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+
+            }
+        }
 
         public static async Task ProcessAccountRegistration(string requestBody, DataBase DBCon, HttpListenerContext context)
         {

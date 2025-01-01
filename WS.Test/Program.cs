@@ -97,6 +97,10 @@ namespace WS.Test
                 {// TODO implement add friend functionality
                     await HTTPMethods.ReturnAll(requestBody, DBCon, inboundMessage);
 
+                }else if (httpMethod == "PUT" && httpURL == url + "NewConversation")
+                {// TODO implement add friend functionality
+                    await HTTPMethods.CreateNewConversation(requestBody, DBCon, inboundMessage);
+
                 }
 
             }

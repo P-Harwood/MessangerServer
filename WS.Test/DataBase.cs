@@ -135,6 +135,84 @@ namespace WS.Test
         }
 
 
+
+
+
+
+        // Passed output of
+        public async Task<bool> CheckConversationExists(ConversationClass conversation)
+        {
+            string query = $"SELECT COUNT(*) FROM conversations WHERE user_ID_1 = @LowerUserID AND user_ID_2 = @HigherUserID;";
+            try
+            {
+                await using (var connection = new NpgsqlConnection(_connectionString))
+                {
+
+                    await connection.OpenAsync();
+                    await using (var command = new NpgsqlCommand(query, connection))
+                    {
+
+                        command.Parameters.AddWithValue("@LowerUserID", conversation.LowerUserID);
+                        command.Parameters.AddWithValue("@HigherUserID", conversation.HigherUserID);
+                        var count = (long)await command.ExecuteScalarAsync();
+
+                        return count > 0;
+                    }
+                }
+            }
+            catch (NpgsqlException npgsqlEx)
+            {
+                Console.WriteLine($"Database error: {npgsqlEx.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+            return false;
+        }
+
+        public async Task<JObject> AddNewConversation(ConversationClass conversation)
+        {
+
+
+
+            try
+            {
+                // Use parameterized query to safely handle inputs
+                string query = "INSERT INTO conversations (user_ID_1, user_ID_2) VALUES (@user_ID_1, @user_ID_2);";
+
+                // Use using block to ensure the connection is properly disposed
+                using (var connection = new NpgsqlConnection(_connectionString))
+                {
+                    await connection.OpenAsync();
+                    using (var command = new NpgsqlCommand(query, connection))
+                    {
+                        // Add parameters to the command to prevent SQL injection and handle byte arrays correctly
+                        command.Parameters.AddWithValue("@user_ID_1", NpgsqlTypes.NpgsqlDbType.Integer, conversation.LowerUserID);
+                        command.Parameters.AddWithValue("@user_ID_2", NpgsqlTypes.NpgsqlDbType.Integer, conversation.HigherUserID);
+
+                        await command.ExecuteNonQueryAsync(); // Execute the query asynchronously
+                    }
+                }
+
+                Console.WriteLine("Account registered successfully.");
+                return new JObject { ["Result"] = "OK" };
+            }
+            catch (Exception ex)
+            {
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine($"Inner exception: {ex.InnerException.Message}");
+                }
+                return HTTPBodyExtractor.errorReturn(ex);
+            }
+
+        }
+
+
+
+
+
         // Gets all users from database, test fuction 
         public async Task<List<UserData>> ReturnAllUsers()
         {

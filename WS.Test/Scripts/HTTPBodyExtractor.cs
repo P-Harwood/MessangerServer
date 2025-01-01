@@ -47,6 +47,60 @@ namespace WS.Test.Scripts
             return errorReturn;
         }
 
+
+        public static ConversationClass ParseConversationIDs(string requestBody)
+        {
+            
+
+            try
+            {
+                JObject JBody = HTTPBodyExtractor.getFormBody(requestBody);
+
+                if (JBody["Result"].ToString() != "OK")
+                {
+                    ConversationClass errorDetails = new ConversationClass
+                    {
+                        Result = "OK",
+                        ErrorMessage = "Error"
+                    };
+
+
+                    return errorDetails;
+                }
+
+
+
+                // TODO: Check better solution
+                int user_ID_1 = Int32.Parse(JBody["user_ID_1"].ToString());
+                int user_ID_2 = Int32.Parse(JBody["user_ID_2"].ToString());
+
+                int[] user_Ids = { user_ID_1, user_ID_2 };
+                Array.Sort(user_Ids);
+
+                ConversationClass conversationDetails = new ConversationClass
+                {
+                    Result = "OK",
+                    LowerUserID = user_Ids[0],
+                    HigherUserID = user_Ids[1]
+                };
+
+                return conversationDetails;
+
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"{ex.Message}");
+                ConversationClass errorDetails = new ConversationClass
+                {
+                    Result = "OK",
+                    ErrorMessage = "Error"
+                };
+                return errorDetails;
+            }
+        }
+
+
         public static CleanDetailsForm CleanLoginDetails(string requestBody)
         {
             try

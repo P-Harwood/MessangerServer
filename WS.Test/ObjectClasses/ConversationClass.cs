@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace WS.Test.ObjectClasses
 {
-    public class CleanDetailsForm
+    public class ConversationClass
     {
         public string Result { get; set; } = "Error";
-        public string? Username { get; set; }
-        public string? Password { get; set; }
+        public int? LowerUserID { get; set; }
+        public int? HigherUserID { get; set; }
         public string? ErrorMessage { get; set; }
     }
 }
