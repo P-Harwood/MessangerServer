@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -10,7 +11,7 @@ using WS.Test.ObjectClasses;
 
 namespace WS.Test.Scripts
 {
-    internal class RequestBodyFormatter
+    internal class RequestBodyExtractor
     {
         public static JObject ExtractRequestBodyValues(string requestBody)
         {
@@ -54,14 +55,14 @@ namespace WS.Test.Scripts
 
             try
             {
-                JObject JBody = RequestBodyFormatter.ExtractRequestBodyValues(requestBody);
+                JObject JBody = RequestBodyExtractor.ExtractRequestBodyValues(requestBody);
 
                 if (JBody["Result"].ToString() != "OK")
                 {
                     ConversationClass errorDetails = new ConversationClass
                     {
-                        Result = "OK",
-                        ErrorMessage = "Error"
+                        Result = "Error",
+                        ErrorMessage = "Error extracting request body"
                     };
 
 
@@ -76,10 +77,35 @@ namespace WS.Test.Scripts
 
                 int[] user_Ids = { user_ID_1, user_ID_2 };
                 Array.Sort(user_Ids);
-                if (user_Ids[0] <= 0)
-                {
 
+
+
+                // Checks if either userid is less than 0 and returns an error if so
+
+                if (user_ID_1 <= 0 || user_ID_2 <=0)
+                {
+                    ConversationClass errorDetails = new ConversationClass
+                    {
+                        Result = "Error",
+                        ErrorMessage = "Provided User ID less than or equal to 0"
+                    };
+                    return errorDetails;
                 }
+
+
+                // Checks if identical userids was provided, if so returns error
+                if (user_ID_1 == user_ID_2)
+                {
+                    ConversationClass errorDetails = new ConversationClass
+                    {
+                        Result = "Error",
+                        ErrorMessage = "Identical User Ids Provided"
+                    };
+                    return errorDetails;
+                }
+
+
+
 
                 ConversationClass conversationDetails = new ConversationClass
                 {
@@ -97,19 +123,19 @@ namespace WS.Test.Scripts
                 Console.WriteLine($"{ex.Message}");
                 ConversationClass errorDetails = new ConversationClass
                 {
-                    Result = "OK",
-                    ErrorMessage = "Error"
+                    Result = "Error",
+                    ErrorMessage = "Internal Server Error"
                 };
                 return errorDetails;
             }
         }
 
 
-        public static CleanDetailsForm FormatAccountCredentialsFromBody(string requestBody)
+        public static CleanDetailsForm ParseAccountCredentials(string requestBody)
         {
             try
             {
-                JObject JBody = RequestBodyFormatter.ExtractRequestBodyValues(requestBody);
+                JObject JBody = RequestBodyExtractor.ExtractRequestBodyValues(requestBody);
 
                 if (JBody["Result"].ToString() != "OK")
                 {

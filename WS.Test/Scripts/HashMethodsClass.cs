@@ -8,7 +8,7 @@ using WS.Test.ObjectClasses;
 
 namespace WS.Test.Scripts
 {
-    public class HashClass
+    public class HashMethodsClass
     {
 
 

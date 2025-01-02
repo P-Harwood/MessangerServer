@@ -129,13 +129,41 @@ namespace WS.Test
                 {
                     Console.WriteLine($"Inner exception: {ex.InnerException.Message}");
                 }
-                return RequestBodyFormatter.errorReturn(ex);
+                return RequestBodyExtractor.errorReturn(ex);
             }
 
         }
 
+        //Check Account ID Exists
+        public async Task<bool> CheckUserIDExists(int userID)
+        {
+            string query = $"SELECT COUNT(*) FROM users WHERE userid = @userID;";
+            try
+            {
+                await using (var connection = new NpgsqlConnection(_connectionString))
+                {
 
+                    await connection.OpenAsync();
+                    await using (var command = new NpgsqlCommand(query, connection))
+                    {
 
+                        command.Parameters.AddWithValue("@userID", userID);
+                        var count = (long)await command.ExecuteScalarAsync();
+
+                        return count > 0;
+                    }
+                }
+            }
+            catch (NpgsqlException npgsqlEx)
+            {
+                Console.WriteLine($"Database error: {npgsqlEx.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+            return false;
+        }
 
 
 
@@ -204,7 +232,7 @@ namespace WS.Test
                 {
                     Console.WriteLine($"Inner exception: {ex.InnerException.Message}");
                 }
-                return RequestBodyFormatter.errorReturn(ex);
+                return RequestBodyExtractor.errorReturn(ex);
             }
 
         }

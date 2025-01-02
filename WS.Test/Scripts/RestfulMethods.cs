@@ -23,7 +23,7 @@ namespace WS.Test.Scripts
             response.ContentType = "application/json"; // Sets response Type, it will currently be changed to application/json
 
 
-            CleanDetailsForm loginDetails = RequestBodyFormatter.FormatAccountCredentialsFromBody(requestBody); // Server Validation for username/password requirements (stops dbcon usage)
+            CleanDetailsForm loginDetails = RequestBodyExtractor.ParseAccountCredentials(requestBody); // Server Validation for username/password requirements (stops dbcon usage)
             
             // If there is an issue with the login details then send bad response
             if (loginDetails.Result == "Error" || loginDetails.Result== "Reject")
@@ -54,7 +54,7 @@ namespace WS.Test.Scripts
             }
 
             // Call Check Hash function to check if match with given password
-            bool hashMatchesPassword = HashClass.ValidateHash(loginDetails.Password, accountDetails.passwordSalt, accountDetails.passwordHash);
+            bool hashMatchesPassword = HashMethodsClass.ValidateHash(loginDetails.Password, accountDetails.passwordSalt, accountDetails.passwordHash);
 
             // If password does not match the account details then respond bad username or password
             if (!hashMatchesPassword)
@@ -130,7 +130,36 @@ namespace WS.Test.Scripts
                 response.ContentType = "application/json";
 
 
-                ConversationClass conversationObject = RequestBodyFormatter.ParseConversationIDs(requestBody);
+                ConversationClass conversationObject = RequestBodyExtractor.ParseConversationIDs(requestBody);
+
+
+                // If error extracting or issue with variables being null then return an error
+                if (conversationObject.Result != "OK" || conversationObject.LowerUserID == null || conversationObject.HigherUserID == null)
+                {
+                    response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                    await SendHttpResponse(response, new { message = conversationObject.ErrorMessage });
+                    return;
+                }
+                
+
+
+                // Database search to check both IDS already exist
+                bool idExists = await DBCon.CheckUserIDExists((int)conversationObject.LowerUserID);
+
+                idExists = idExists && await DBCon.CheckUserIDExists((int)conversationObject.HigherUserID);
+
+                // If an id does not exist repond with badrequest
+                if (!idExists)
+                {
+                    response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    await SendHttpResponse(response, new { message = "A UserID Does not exist." });
+                    return;
+                }
+
+
+
+
+
 
                 bool conversationExists = await DBCon.CheckConversationExists(conversationObject);
 
@@ -146,11 +175,6 @@ namespace WS.Test.Scripts
 
                 response.StatusCode = (int)HttpStatusCode.OK;
                 await SendHttpResponse(response, new { message = "Converesation Created" });
-                /*
-                if (insertionStatus.Result == "OK")
-                {
-                }
-                */
 
             }
             catch (Exception ex)
@@ -170,7 +194,7 @@ namespace WS.Test.Scripts
 
 
                 // Clean the details to ensure that they meet requirements
-                CleanDetailsForm loginDetails = RequestBodyFormatter.FormatAccountCredentialsFromBody(requestBody);
+                CleanDetailsForm loginDetails = RequestBodyExtractor.ParseAccountCredentials(requestBody);
 
                 if (loginDetails.Result == "Error" || loginDetails.Result == "Reject")
                 {
@@ -193,7 +217,7 @@ namespace WS.Test.Scripts
 
 
                 // Generate Hash salt and out
-                HashInformation hashObj = HashClass.GenerateHashInformation(loginDetails.Password);
+                HashInformation hashObj = HashMethodsClass.GenerateHashInformation(loginDetails.Password);
 
 
                 // If there is an issue with the hash repond with the error TODO Logging
