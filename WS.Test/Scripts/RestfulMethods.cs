@@ -11,7 +11,7 @@ using System.Diagnostics;
 
 namespace WS.Test.Scripts
 {
-    internal class HTTPMethods
+    internal class RestfulMethods
     {
         public static async Task SignIn(string requestBody, DataBase DBCon, HttpListenerContext context)
         {
@@ -23,7 +23,7 @@ namespace WS.Test.Scripts
             response.ContentType = "application/json"; // Sets response Type, it will currently be changed to application/json
 
 
-            CleanDetailsForm loginDetails = HTTPBodyExtractor.CleanLoginDetails(requestBody); // Server Validation for username/password requirements (stops dbcon usage)
+            CleanDetailsForm loginDetails = RequestBodyFormatter.FormatAccountCredentialsFromBody(requestBody); // Server Validation for username/password requirements (stops dbcon usage)
             
             // If there is an issue with the login details then send bad response
             if (loginDetails.Result == "Error" || loginDetails.Result== "Reject")
@@ -54,7 +54,7 @@ namespace WS.Test.Scripts
             }
 
             // Call Check Hash function to check if match with given password
-            bool hashMatchesPassword = HashClass.checkHash(loginDetails.Password, accountDetails.passwordSalt, accountDetails.passwordHash);
+            bool hashMatchesPassword = HashClass.ValidateHash(loginDetails.Password, accountDetails.passwordSalt, accountDetails.passwordHash);
 
             // If password does not match the account details then respond bad username or password
             if (!hashMatchesPassword)
@@ -130,7 +130,7 @@ namespace WS.Test.Scripts
                 response.ContentType = "application/json";
 
 
-                ConversationClass conversationObject = HTTPBodyExtractor.ParseConversationIDs(requestBody);
+                ConversationClass conversationObject = RequestBodyFormatter.ParseConversationIDs(requestBody);
 
                 bool conversationExists = await DBCon.CheckConversationExists(conversationObject);
 
@@ -170,7 +170,7 @@ namespace WS.Test.Scripts
 
 
                 // Clean the details to ensure that they meet requirements
-                CleanDetailsForm loginDetails = HTTPBodyExtractor.CleanLoginDetails(requestBody);
+                CleanDetailsForm loginDetails = RequestBodyFormatter.FormatAccountCredentialsFromBody(requestBody);
 
                 if (loginDetails.Result == "Error" || loginDetails.Result == "Reject")
                 {
@@ -193,7 +193,7 @@ namespace WS.Test.Scripts
 
 
                 // Generate Hash salt and out
-                HashInformation hashObj = HashClass.generateHash(loginDetails.Password);
+                HashInformation hashObj = HashClass.GenerateHashInformation(loginDetails.Password);
 
 
                 // If there is an issue with the hash repond with the error TODO Logging

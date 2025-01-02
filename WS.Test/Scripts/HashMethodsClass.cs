@@ -15,7 +15,7 @@ namespace WS.Test.Scripts
 
 
         // Method for turning raw password into a hash
-        public static bool checkHash(string password, byte[] salt, byte[] passwordHash)
+        public static bool ValidateHash(string password, byte[] salt, byte[] passwordHash)
         {
             // keysize is used for how manye bytes to create for the salt
             const int keySize = 64;
@@ -34,7 +34,7 @@ namespace WS.Test.Scripts
 
 
         // Method for creating password Hash
-        public static HashInformation generateHash(string password)
+        public static HashInformation GenerateHashInformation(string password)
         {
             HashInformation returnInformation = new HashInformation
             {

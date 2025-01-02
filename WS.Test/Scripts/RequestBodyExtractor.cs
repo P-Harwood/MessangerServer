@@ -10,9 +10,9 @@ using WS.Test.ObjectClasses;
 
 namespace WS.Test.Scripts
 {
-    internal class HTTPBodyExtractor
+    internal class RequestBodyFormatter
     {
-        public static JObject getFormBody(string requestBody)
+        public static JObject ExtractRequestBodyValues(string requestBody)
         {
             try
             {
@@ -54,7 +54,7 @@ namespace WS.Test.Scripts
 
             try
             {
-                JObject JBody = HTTPBodyExtractor.getFormBody(requestBody);
+                JObject JBody = RequestBodyFormatter.ExtractRequestBodyValues(requestBody);
 
                 if (JBody["Result"].ToString() != "OK")
                 {
@@ -105,11 +105,11 @@ namespace WS.Test.Scripts
         }
 
 
-        public static CleanDetailsForm CleanLoginDetails(string requestBody)
+        public static CleanDetailsForm FormatAccountCredentialsFromBody(string requestBody)
         {
             try
             {
-                JObject JBody = HTTPBodyExtractor.getFormBody(requestBody);
+                JObject JBody = RequestBodyFormatter.ExtractRequestBodyValues(requestBody);
 
                 if (JBody["Result"].ToString() != "OK")
                 {

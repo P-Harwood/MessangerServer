@@ -129,7 +129,7 @@ namespace WS.Test
                 {
                     Console.WriteLine($"Inner exception: {ex.InnerException.Message}");
                 }
-                return HTTPBodyExtractor.errorReturn(ex);
+                return RequestBodyFormatter.errorReturn(ex);
             }
 
         }
@@ -204,7 +204,7 @@ namespace WS.Test
                 {
                     Console.WriteLine($"Inner exception: {ex.InnerException.Message}");
                 }
-                return HTTPBodyExtractor.errorReturn(ex);
+                return RequestBodyFormatter.errorReturn(ex);
             }
 
         }
