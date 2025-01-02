@@ -76,6 +76,10 @@ namespace WS.Test.Scripts
 
                 int[] user_Ids = { user_ID_1, user_ID_2 };
                 Array.Sort(user_Ids);
+                if (user_Ids[0] <= 0)
+                {
+
+                }
 
                 ConversationClass conversationDetails = new ConversationClass
                 {

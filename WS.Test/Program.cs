@@ -86,20 +86,20 @@ namespace WS.Test
             {
                 if (httpMethod == "PUT" && httpURL == url + "Register")
                 {
-                    await HTTPMethods.ProcessAccountRegistration(requestBody, DBCon, inboundMessage);
+                    await RestfulMethods.ProcessAccountRegistration(requestBody, DBCon, inboundMessage);
 
                 } else if (httpMethod == "POST" && httpURL == url + "SignIn")
                 {
-                    await HTTPMethods.SignIn(requestBody, DBCon, inboundMessage);
+                    await RestfulMethods.SignIn(requestBody, DBCon, inboundMessage);
 
                 }
                 else if (httpMethod == "GET" && httpURL == url + "AddFriend")
                 {// TODO implement add friend functionality
-                    await HTTPMethods.ReturnAll(requestBody, DBCon, inboundMessage);
+                    await RestfulMethods.ReturnAll(requestBody, DBCon, inboundMessage);
 
                 }else if (httpMethod == "PUT" && httpURL == url + "NewConversation")
                 {// TODO implement add friend functionality
-                    await HTTPMethods.CreateNewConversation(requestBody, DBCon, inboundMessage);
+                    await RestfulMethods.CreateNewConversation(requestBody, DBCon, inboundMessage);
 
                 }
 
@@ -109,7 +109,7 @@ namespace WS.Test
                 if (httpMethod == "GET" && httpURL == url + "AllUsers")
                 {
                     Debug.WriteLine("Working on returing all users");
-                    await HTTPMethods.ReturnAll(requestBody, DBCon, inboundMessage);
+                    await RestfulMethods.ReturnAll(requestBody, DBCon, inboundMessage);
 
                 }
             }
