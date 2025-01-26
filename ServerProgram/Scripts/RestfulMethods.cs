@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using WS.Test.ObjectClasses;
 using System.Diagnostics;
+using Npgsql;
+using Microsoft.VisualBasic;
 
 namespace WS.Test.Scripts
 {
@@ -117,7 +119,7 @@ namespace WS.Test.Scripts
         }
 
 
-
+        /*
         public static async Task CreateNewConversation(string requestBody, DataBase DBCon, HttpListenerContext context)
         {
             try
@@ -130,11 +132,11 @@ namespace WS.Test.Scripts
                 response.ContentType = "application/json";
 
 
-                ConversationClass conversationObject = RequestBodyExtractor.ParseConversationIDs(requestBody);
+                var conversationObject = RequestBodyExtractor.ParseConversationIDs(requestBody);
 
 
                 // If error extracting or issue with variables being null then return an error
-                if (conversationObject.Result != "OK" || conversationObject.LowerUserID == null || conversationObject.HigherUserID == null)
+                if (!conversationObject.IsSuccess)
                 {
                     response.StatusCode = (int)HttpStatusCode.InternalServerError;
                     await SendHttpResponse(response, new { message = conversationObject.ErrorMessage });
@@ -144,9 +146,9 @@ namespace WS.Test.Scripts
 
 
                 // Database search to check both IDS already exist
-                bool idExists = await DBCon.CheckUserIDExists((int)conversationObject.LowerUserID);
+                bool idExists = await DBCon.CheckUserIDExists((int)conversationObject.Value.LowerUserID);
 
-                idExists = idExists && await DBCon.CheckUserIDExists((int)conversationObject.HigherUserID);
+                idExists = idExists && await DBCon.CheckUserIDExists((int)conversationObject.Value.HigherUserID);
 
                 // If an id does not exist repond with badrequest
                 if (!idExists)
@@ -161,7 +163,111 @@ namespace WS.Test.Scripts
 
 
 
-                bool conversationExists = await DBCon.CheckConversationExists(conversationObject);
+                bool conversationExists = await DBCon.CheckConversationExists(conversationObject.Value);
+
+                if (conversationExists)
+                {
+                    response.StatusCode = (int)HttpStatusCode.Conflict;
+                    await SendHttpResponse(response, new { message = "Conversation Already Exists" });
+                    return;
+                }
+
+                var insertionStatus = await DBCon.AddNewConversation(conversationObject.Value);
+
+                if (insertionStatus.IsSuccess)
+                {
+                    response.StatusCode = (int)HttpStatusCode.OK;
+                    await SendHttpResponse(response, new { message = "Converesation Created" });
+                    Console.WriteLine("New Conversation Created");
+                }
+                else
+                {
+                    throw new NpgsqlException("Error inserting new conversation into database");
+                }
+            }
+            catch (NpgsqlException ex)
+            {
+
+                Console.WriteLine(ex.ToString());
+
+                HttpListenerResponse response = context.Response;
+                response.ContentType = "application/json";
+                response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                await SendHttpResponse(response, new { message = "Error inserting into database" });
+                return;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+
+                HttpListenerResponse response = context.Response;
+                response.ContentType = "application/json";
+                response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                await SendHttpResponse(response, new { message = "Error processing request" });
+                return;
+
+            }
+        }
+        */
+
+
+
+        public static async Task CreateNewConversationByName(string requestBody, DataBase DBCon, HttpListenerContext context)
+        {
+            try
+            {
+
+
+                //TODO clean the ids, make sure they are real ids and that they are unique
+                // Prepare response
+                HttpListenerResponse response = context.Response;
+                response.ContentType = "application/json";
+
+
+                var conversationObject = RequestBodyExtractor.ParseConversationNames(requestBody);
+
+                // If error extracting or issue with variables being null then return an error
+                if (!conversationObject.IsSuccess)
+                {
+                    response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                    await SendHttpResponse(response, new { message = conversationObject.ErrorMessage });
+                    return;
+                }
+
+
+
+                // Database search to check both IDS already exist
+                var F_UserData = await DBCon.GetUserDetailsByUsername(conversationObject.Value.F_UserName);
+                
+                var Lo_UserData = await DBCon.GetUserDetailsByUsername(conversationObject.Value.Lo_UserName);
+                
+
+
+                // If an id does not exist repond with badrequest
+                if (!F_UserData.IsSuccess || !Lo_UserData.IsSuccess)
+                {
+                    response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    await SendHttpResponse(response, new { message = "A Username Does not exist." });
+                    return;
+                }
+
+                Console.WriteLine($"\n{Lo_UserData.Value.Username} (UID: {Lo_UserData.Value.Id}) Requests Conversation with: {F_UserData.Value.Username} (UID: {F_UserData.Value.Id})");
+
+
+                List<UserData> userList = new List<UserData> { F_UserData.Value, Lo_UserData.Value };
+
+                // Sort the list by Id in ascending order . Good function to remember
+                var sortedUserList = userList.OrderBy(user => user.Id).ToList();
+
+                ConversationClass conversation = new ConversationClass
+                {
+                    LowerUserID = userList[0].Id,
+                    HigherUserID = userList[1].Id
+                };
+
+
+
+                bool conversationExists = await DBCon.CheckConversationExists(conversation);
 
                 if (conversationExists)
                 {
@@ -170,19 +276,43 @@ namespace WS.Test.Scripts
                     return;
                 }
                 
-                JObject insertionStatus = await DBCon.AddNewConversation(conversationObject);
+                var insertionStatus = await DBCon.AddNewConversation(conversation);
 
-
-                response.StatusCode = (int)HttpStatusCode.OK;
-                await SendHttpResponse(response, new { message = "Converesation Created" });
-
+                if (insertionStatus.IsSuccess)
+                {
+                    response.StatusCode = (int)HttpStatusCode.OK;
+                    await SendHttpResponse(response, new { message = "Converesation Created" });
+                    Console.WriteLine("New Conversation Created");
+                }
+                else
+                {
+                    throw new NpgsqlException("Error inserting new conversation into database");
+                }
+            }
+            catch (NpgsqlException ex)
+            {
+                HttpListenerResponse response = context.Response;
+                response.ContentType = "application/json";
+                response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                await SendHttpResponse(response, new { message = "Error inserting into database" });
+                return;
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
 
+                HttpListenerResponse response = context.Response;
+                response.ContentType = "application/json";
+                response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                await SendHttpResponse(response, new { message = "Error processing request" });
+                return;
+
             }
+            
         }
+
+
+
 
         public static async Task ProcessAccountRegistration(string requestBody, DataBase DBCon, HttpListenerContext context)
         {

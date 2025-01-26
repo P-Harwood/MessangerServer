@@ -10,6 +10,8 @@ using Newtonsoft.Json;
 using WS.Test.ObjectClasses;
 using Newtonsoft.Json.Linq;
 using WS.Test.Scripts;
+using MessangerServer.ObjectClasses.Conversations;
+using MessangerServer.Scripts.Wrappers;
 
 namespace WS.Test
 {
@@ -167,6 +169,60 @@ namespace WS.Test
 
 
 
+        //Check Account ID Exists
+        public async Task<Result<UserData>> GetUserDetailsByUsername(string username)
+        {
+            string query = $"SELECT * FROM users WHERE username = @username;";
+            try
+            {
+                await using (var connection = new NpgsqlConnection(_connectionString))
+                {
+
+                    await connection.OpenAsync();
+                    await using (var command = new NpgsqlCommand(query, connection))
+                    {
+
+                        command.Parameters.AddWithValue("@username", username);
+                        // Using ExecuteReader to get the results
+                        await using (var reader = await command.ExecuteReaderAsync())
+                        {
+                            if (await reader.ReadAsync())
+                            {
+                                // Extracting data from the reader
+                                var userId = reader.GetInt32(0); // Assuming id is an integer
+                                var userName = reader.GetString(1); // Assuming username is a string
+
+                                // Returning the result in a UserData object
+                                UserData user = new UserData
+                                {
+                                    Id = userId,
+                                    Username = userName
+                                };
+
+                                return Result<UserData>.Success(user);
+                            }
+                            else
+                            {
+                                // No user found
+                                return Result<UserData>.Failure("User not found");
+                            }
+                        }
+                    }
+                }
+            }
+            catch (NpgsqlException npgsqlEx)
+            {
+                return Result<UserData>.Failure($"Database error: {npgsqlEx.Message}");
+            }
+            catch (Exception ex)
+            {
+                return Result<UserData>.Failure($"An error occurred: {ex.Message}"); ;
+            }
+            
+        }
+
+
+
         // Passed output of
         public async Task<bool> CheckConversationExists(ConversationClass conversation)
         {
@@ -199,7 +255,9 @@ namespace WS.Test
             return false;
         }
 
-        public async Task<JObject> AddNewConversation(ConversationClass conversation)
+      
+
+        public async Task<Result<bool>> AddNewConversation(ConversationClass conversation)
         {
 
 
@@ -223,16 +281,13 @@ namespace WS.Test
                     }
                 }
 
-                Console.WriteLine("Account registered successfully.");
-                return new JObject { ["Result"] = "OK" };
+                return Result<bool>.Success(true);
             }
             catch (Exception ex)
             {
-                if (ex.InnerException != null)
-                {
-                    Console.WriteLine($"Inner exception: {ex.InnerException.Message}");
-                }
-                return RequestBodyExtractor.errorReturn(ex);
+
+                return Result<bool>.Failure($"Inner exception: {ex.Message}");
+                Console.WriteLine($"Inner exception: {ex.Message}");
             }
 
         }

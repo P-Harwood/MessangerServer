@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using MessangerServer.ObjectClasses.Conversations;
+using MessangerServer.Scripts.Wrappers;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -49,7 +51,7 @@ namespace WS.Test.Scripts
         }
 
 
-        public static ConversationClass ParseConversationIDs(string requestBody)
+        public static Result<ConversationClass> ParseConversationIDs(string requestBody)
         {
             
 
@@ -59,14 +61,7 @@ namespace WS.Test.Scripts
 
                 if (JBody["Result"].ToString() != "OK")
                 {
-                    ConversationClass errorDetails = new ConversationClass
-                    {
-                        Result = "Error",
-                        ErrorMessage = "Error extracting request body"
-                    };
-
-
-                    return errorDetails;
+                    return Result<ConversationClass>.Failure("Error extracting request body");
                 }
 
 
@@ -84,49 +79,80 @@ namespace WS.Test.Scripts
 
                 if (user_ID_1 <= 0 || user_ID_2 <=0)
                 {
-                    ConversationClass errorDetails = new ConversationClass
-                    {
-                        Result = "Error",
-                        ErrorMessage = "Provided User ID less than or equal to 0"
-                    };
-                    return errorDetails;
+                    return Result<ConversationClass>.Failure("Provided User ID less than or equal to 0");
                 }
 
 
                 // Checks if identical userids was provided, if so returns error
                 if (user_ID_1 == user_ID_2)
                 {
-                    ConversationClass errorDetails = new ConversationClass
-                    {
-                        Result = "Error",
-                        ErrorMessage = "Identical User Ids Provided"
-                    };
-                    return errorDetails;
+                    return Result<ConversationClass>.Failure("Identical User Ids Provided");
                 }
-
-
 
 
                 ConversationClass conversationDetails = new ConversationClass
                 {
-                    Result = "OK",
                     LowerUserID = user_Ids[0],
                     HigherUserID = user_Ids[1]
                 };
 
-                return conversationDetails;
+                return Result<ConversationClass>.Success(conversationDetails);
 
 
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"{ex.Message}");
-                ConversationClass errorDetails = new ConversationClass
+                return Result<ConversationClass>.Failure("Internal Server Error");
+            }
+        }
+
+        public static Result<ConversationByName> ParseConversationNames(string requestBody)
+        {
+            
+
+            try
+            {
+                JObject JBody = RequestBodyExtractor.ExtractRequestBodyValues(requestBody);
+
+                if (JBody["Result"].ToString() != "OK")
                 {
-                    Result = "Error",
-                    ErrorMessage = "Internal Server Error"
+                    return Result<ConversationByName>.Failure("Error extracting request body");
+
+                }
+
+
+                string F_UserName = JBody["foriegnUserName"].ToString();
+                string Lo_UserName = JBody["localUserName"].ToString();
+
+                // Checks if identical names was provided, if so returns error
+                if (F_UserName.Equals(Lo_UserName))
+                {
+                    return Result<ConversationByName>.Failure("Identical User names Provided");
+                }
+
+                if (F_UserName.Equals(null) || Lo_UserName.Equals(null)){
+                    return Result<ConversationByName>.Failure("A username provided is null");
+                }
+
+
+
+
+                ConversationByName conversationDetails = new ConversationByName
+                {
+                    F_UserName = F_UserName,
+                    Lo_UserName = Lo_UserName
                 };
-                return errorDetails;
+
+                return Result<ConversationByName>.Success(conversationDetails);
+
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error message while parsing conversation by names: {ex.Message}");
+
+                return Result<ConversationByName>.Failure("Error message while parsing conversation by names: {ex.Message}");
             }
         }
 

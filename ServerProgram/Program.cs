@@ -97,11 +97,16 @@ namespace WS.Test
                 {// TODO implement add friend functionality
                     await RestfulMethods.ReturnAll(requestBody, DBCon, inboundMessage);
 
-                }else if (httpMethod == "PUT" && httpURL == url + "NewConversation")
+                }else if (httpMethod == "PUT" && httpURL == url + "NewConversationByName")
+                {// TODO implement add friend functionality
+                    await RestfulMethods.CreateNewConversationByName(requestBody, DBCon, inboundMessage);
+
+                }/*else if (httpMethod == "PUT" && httpURL == url + "NewConversation")
                 {// TODO implement add friend functionality
                     await RestfulMethods.CreateNewConversation(requestBody, DBCon, inboundMessage);
 
                 }
+                  */
 
             }
             else
@@ -190,7 +195,7 @@ namespace WS.Test
                         byte[] serverMessageBytes = Encoding.UTF8.GetBytes(clientMessage);
                         await webSocket.SendAsync(new ArraySegment<byte>(serverMessageBytes), WebSocketMessageType.Text, true, CancellationToken.None);
                         */
-                    }
+            }
                     else if (result.MessageType == WebSocketMessageType.Close)
                     {
                         Console.WriteLine("Client disconnected.");
