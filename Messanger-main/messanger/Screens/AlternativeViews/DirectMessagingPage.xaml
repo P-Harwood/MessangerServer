@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="messanger.Screens.AlternativeViews.DirectMessagingPage">
+
+
+    <Grid>
+
+        <!-- Grid Definitions -->
+        <Grid.RowDefinitions>
+
+            <!-- Extra details top bar -->
+            <RowDefinition Height="50" />
+
+            <!-- Central content box -->
+            <RowDefinition Height="1*" />
+
+            <!-- bottom options bar -->
+            <RowDefinition Height="50" />
+
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+
+            <!-- Central main content column -->
+            <ColumnDefinition Width="24*" />
+
+            <!-- Auxillery right column -->
+            <ColumnDefinition Width="340" />
+
+        </Grid.ColumnDefinitions>
+
+
+        <!-- Top Central Bar, DMs Variant -->
+        <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" BackgroundColor="#313338" IsVisible="True">
+            <!-- One Row -->
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*" />
+            </Grid.RowDefinitions>
+
+            <!-- One columns -->
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="25*" />
+            </Grid.ColumnDefinitions>
+
+            <Label Text="Sincel" Grid.Column="1" Grid.Row="1" HorizontalOptions="Start" VerticalOptions="Center" TextColor="White"/>
+            <BoxView HeightRequest="1" Grid.ColumnSpan="2" BackgroundColor="#282a2e" VerticalOptions="End" />
+        </Grid>
+        <!-- Top Central Bar, DMs Variant -->
+
+        <!-- ChatScreen -->
+        <Grid Grid.Row="1" Grid.Column="0" BackgroundColor="#313338" IsVisible="True">
+            <!-- One Row -->
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*" />
+            </Grid.RowDefinitions>
+
+            <!-- One columns -->
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+
+
+
+        </Grid>
+        <!-- ChatScreen -->
+
+        <!-- View Full Profile Button-->
+        <StackLayout Grid.Row="2" Grid.Column="1" BackgroundColor="#232428" Padding="5,10" IsVisible="True">
+            <BoxView HeightRequest="1" BackgroundColor="#343539" VerticalOptions="Start" />
+            <Label Text="View Full profile" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" TextColor="#869BA4" Margin="5,0"/>
+        </StackLayout>
+        <!-- View Full Profile Button-->
+
+        <!-- UserDetails side tab -->
+        <Grid Grid.Row="1" Grid.Column="1" BackgroundColor="#232428" IsVisible="True">
+            <!-- One Row -->
+            <Grid.RowDefinitions>
+                <RowDefinition Height="120" />
+                <!-- Colour bar at the top -->
+                <RowDefinition Height="40" />
+                <!-- Spacing -->
+                <RowDefinition Height="50" />
+                <!-- Recipicant Name -->
+                <RowDefinition Height="1*" />
+                <!-- Spacing -->
+                <RowDefinition Height="65" />
+                <!-- Member since bar -->
+                <RowDefinition Height="1*" />
+                <!-- Spacing -->
+                <RowDefinition Height="100" />
+                <!-- Mutuals Bar -->
+                <RowDefinition Height="36*" />
+                <!-- Spacing -->
+            </Grid.RowDefinitions>
+
+            <!-- One columns -->
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="10*" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Colour bar at the top -->
+            <BoxView Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" BackgroundColor="#1A307E"/>
+            <!-- Colour bar at the top -->
+
+            <!-- Recipicant Name -->
+            <StackLayout Grid.Row="2" Grid.Column="1">
+                <Label Text="Sincel" HorizontalOptions="Start" VerticalOptions="Center" TextColor="White" FontSize="20" FontAttributes="Bold" Margin ="0,3"/>
+                <Label Text="Sincel" HorizontalOptions="Start" VerticalOptions="Center" TextColor="#869BA4" FontSize="14"/>
+            </StackLayout>
+            <!-- Recipicant Name -->
+
+            <!-- Container for User join date information -->
+            <Border Grid.Row="4" Grid.Column="1" Stroke="#111214" StrokeShape="RoundRectangle 5,5,5,5" StrokeThickness="4" Background="#111214" HorizontalOptions="FillAndExpand">
+                <StackLayout  BackgroundColor="#111214" Padding="5,10">
+                    <Label Text="Member Since" Grid.Column="1" Grid.Row="3"  HorizontalOptions="Start" VerticalOptions="Center" TextColor="White"  FontSize="12"/>
+                    <Label Text="Join date" Grid.Column="1" Grid.Row="3"  HorizontalOptions="Start" VerticalOptions="Center" TextColor="#869BA4"/>
+                </StackLayout>
+            </Border>
+            <!-- Container for User join date information -->
+
+            <!-- Container for side menu mutual servers and mutual friends Component -->
+            <Border Grid.Row="6" Grid.Column="1" Stroke="#111214" StrokeShape="RoundRectangle 5,5,5,5" StrokeThickness="4" Background="#111214" HorizontalOptions="FillAndExpand">
+                <Grid BackgroundColor="#111214">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*" />
+                        <RowDefinition Height="1*" />
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width=" 10*"/>
+                        <ColumnDefinition Width=" 1*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Mutual friend and servers content -->
+                    <Label Text="Mutual Servers - X"  Grid.Column="0" Grid.Row="0" HorizontalOptions="Start" VerticalOptions="CenterAndExpand" TextColor="#869BA4" Margin="5,0"/>
+                    <Label Text=">" Grid.Column="1" Grid.Row="0" HorizontalOptions="Start" VerticalOptions="CenterAndExpand" TextColor="#869BA4" Margin="5,0"/>
+
+
+                    <BoxView Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" HeightRequest="1" BackgroundColor="#2E2F34" VerticalOptions="Start" Margin="10,0" />
+
+                    <Label Text="Mutual Friends - X" Grid.Column="0" Grid.Row="1" HorizontalOptions="Start" VerticalOptions="CenterAndExpand" TextColor="#869BA4" Margin="5,0"/>
+                    <Label Text=">" Grid.Column="1" Grid.Row="1" HorizontalOptions="Start" VerticalOptions="CenterAndExpand" TextColor="#869BA4" Margin="5,0"/>
+                    <!-- Mutual friend and servers content -->
+
+                </Grid>
+            </Border>
+            <!-- Container for side menu mutual servers and mutual friends Component -->
+
+
+
+        </Grid>
+        <!-- UserDetails side tab -->
+
+        <!-- MessageBarContainer -->
+        <Grid Grid.Row="2" Grid.Column="0" BackgroundColor="#313338" IsVisible="True">
+            <!-- One Row -->
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*" />
+            </Grid.RowDefinitions>
+
+            <!-- One columns -->
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="20*" />
+                <ColumnDefinition Width="70" />
+            </Grid.ColumnDefinitions>
+
+            <Border  Grid.Row="0" Grid.Column="0" Stroke="#383a40" StrokeShape="RoundRectangle 5,5,5,5" StrokeThickness="1" Background="#383a40" HorizontalOptions="FillAndExpand" VerticalOptions="Start" HeightRequest="45" Margin="20,0,0,5" Padding="0,0,0,3">
+                <StackLayout Orientation="Horizontal" VerticalOptions="CenterAndExpand">
+                    <Label VerticalOptions="Center" Margin="10,0" FontSize="20">+</Label>
+                    <Entry x:Name="MessageUser" Placeholder="Message a user" HorizontalOptions="FillAndExpand" VerticalOptions="Center" TextColor="White"/>
+
+                </StackLayout>
+
+            </Border>
+            <Border  Grid.Row="0" Grid.Column="1" Stroke="#383a40" StrokeShape="RoundRectangle 5,5,5,5" StrokeThickness="4" Background="#383a40" HorizontalOptions="FillAndExpand" VerticalOptions="Start" HeightRequest="45" WidthRequest="45" Margin="0,0,0,5"/>
+
+        </Grid>
+        <!-- MessageBarContainer -->
+
+    </Grid>
+
+
+</ContentView>

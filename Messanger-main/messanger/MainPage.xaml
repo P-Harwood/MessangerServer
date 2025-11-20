@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="messanger.MainPage">
+
+    <Grid BackgroundColor="LightGray">
+        <!-- Grid Definitions -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*" />
+            <!-- 1/5 of the height -->
+            <RowDefinition Height="3*" />
+            <!-- 3/5 of the height -->
+            <RowDefinition Height="1*" />
+            <!-- 1/5 of the height -->
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+            <!-- 1st column -->
+            <ColumnDefinition Width="4*" />
+            <!-- 2nd column -->
+            <ColumnDefinition Width="1*" />
+            <!-- 3rd column -->
+        </Grid.ColumnDefinitions>
+
+        <!-- Inner box, splits into left and right side -->
+        <Grid Grid.Row="1" Grid.Column="1" BackgroundColor="#37393E">
+            <!-- One Row -->
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*" />
+            </Grid.RowDefinitions>
+
+            <!-- Two columns -->
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+            <Label Text="Right Side" Grid.Column="1" HorizontalOptions="Center" VerticalOptions="Center" TextColor="White"/>
+
+
+
+
+            <!-- Left Grid -->
+            <Grid Grid.Column="0" BackgroundColor="#37393E">
+                <!-- Nine Row -->
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="1*" />
+                </Grid.RowDefinitions>
+
+                <!-- One columns -->
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="10*" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Add your inner content here -->
+                <Label Text="Welcome Back!"                         Grid.Row="0" Grid.Column="1" HorizontalOptions="Center" VerticalOptions="End" TextColor="White" FontSize ="40"/>
+
+                <Label Text="We're so excited to see you again!"    Grid.Row="1" Grid.Column="1" HorizontalOptions="Center" VerticalOptions="Center" TextColor="White"/>
+
+                <Label Text="EMAIL OR PHONE NUMBER"                 Grid.Row="2" Grid.Column="1" HorizontalOptions="Start" VerticalOptions="End" TextColor="White"/>
+
+                <Entry x:Name="NameLoginBox" Placeholder=""         Grid.Row="3" Grid.Column="1" HorizontalOptions="FillAndExpand" TextColor="White" BackgroundColor="#202225" />
+
+                <Label Text="PASSWORD"                              Grid.Row="4" Grid.Column="1" HorizontalOptions="Start" VerticalOptions="End" TextColor="White"/>
+
+                <Entry x:Name="PasswordBox" Placeholder=""          Grid.Row="5" Grid.Column="1" HorizontalOptions="FillAndExpand" TextColor="White" BackgroundColor="#202225" IsPassword="True" Completed="SignInButtonPressed" />
+
+                <Label Text="Forgot Your Password?"                 Grid.Row="6" Grid.Column="1" HorizontalOptions="Start" VerticalOptions="Start" TextColor="#586ae8">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="RegisterButtonPressed" />
+                    </Label.GestureRecognizers>
+                </Label>
+
+                <Button Text="Login"                                Grid.Row="7" Grid.Column="1" Clicked="SignInButtonPressed" BackgroundColor="#586ae8" TextColor="White" FontSize="18" HorizontalOptions="FillAndExpand" VerticalOptions="Center" />
+
+                <StackLayout Orientation="Horizontal" Grid.Row="8" Grid.Column="1">
+                    <Label Text="Need an account? "     HorizontalOptions="Start" VerticalOptions="Start" TextColor="White"/>
+                    
+                    <Label Text="Register" FontSize="15" TextColor="#586ae8" HorizontalOptions="Center" VerticalOptions="Start" Margin="5,0,0,0">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="RegisterButtonPressed" />
+                        </Label.GestureRecognizers>
+                    </Label>
+
+                </StackLayout>
+                
+
+            </Grid>
+        </Grid>
+    </Grid>
+</ContentPage>

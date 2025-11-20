@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="messanger.Screens.AlternativeViews.LeftAltPanel">
+
+
+
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="50" />
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <!-- Inherits a 200px gap -->
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+
+        
+        
+        
+        
+        <!--Left Top panel for searching for conversations-->
+        <Grid BackgroundColor="#2b2d31" Grid.Row="0" Grid.Column="0">
+
+
+            <!-- Grid Definitions -->
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*" />
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <!-- 1st column -->
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+            <!-- Grid Definitions -->
+
+
+            <!-- Search box Visual -->
+            <Border  Grid.Row="0" Grid.Column="0" Stroke="#1e1f22" StrokeShape="RoundRectangle 5,5,5,5" StrokeThickness="0" Background="#1e1f22" HorizontalOptions="FillAndExpand" VerticalOptions="Center" HeightRequest="25" Margin="5,5">
+                <Entry x:Name="FindConversationBox" Placeholder="Find or start a conversation " BackgroundColor="Transparent"  HorizontalOptions="FillAndExpand" VerticalOptions="StartAndExpand"  TextColor="#8597a4" FontSize="12" HeightRequest="25" MinimumHeightRequest="25" />
+            </Border>
+            <!-- Search box Visual -->
+
+            <!-- Underline border -->
+            <BoxView HeightRequest="1" Grid.ColumnSpan="2" BackgroundColor="#1F2023" VerticalOptions="End" />
+
+        </Grid>
+        <!--Left Top panel for searching for conversations-->
+
+        <!-- Left Middle panel which displays Friends, Message Requests .etc -->
+        <Grid Grid.Row="1" Grid.Column="0" BackgroundColor="#2b2d31">
+
+            <!-- Grid Definitions -->
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*" />
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+            <!-- Grid Definitions -->
+
+            <!-- Scroll view which contains the tab options and list of recent friends -->
+            <ScrollView  BackgroundColor="#2b2d31" Grid.Column="0" Grid.Row="0">
+                <!-- Stack layout for the tab options, keep it seperate from list of friends for cleansiness-->
+                <StackLayout>
+
+                    <!-- Stack layout for friends Option-->
+                    <StackLayout HeightRequest="40" Margin="10,5" Orientation="Horizontal" >
+                        <BoxView WidthRequest="20" HeightRequest="20" Margin="5,0" VerticalOptions="Center"></BoxView>
+                        <Label Text="Friends" Grid.Column="1" Grid.Row="1" HorizontalOptions="Start" VerticalOptions="Center" TextColor="#869BA4" Padding="5,5"/>
+                    </StackLayout>
+
+
+                    <!-- Stack layout for Message Requests Option-->
+                    <StackLayout HeightRequest="40" Margin="10,5"  Orientation="Horizontal" >
+                        <BoxView WidthRequest="20" HeightRequest="20" Margin="5,0" VerticalOptions="Center"></BoxView>
+                        <Label Text="Message Requests" Grid.Column="1" Grid.Row="1" HorizontalOptions="Start" VerticalOptions="Center" TextColor="#869BA4" Padding="5,5"/>
+                    </StackLayout>
+
+
+                    <!-- Display header for dms-->
+                    <StackLayout Margin="10,15"  Orientation="Horizontal" HorizontalOptions="StartAndExpand">
+                        <Label Text="DIRECT MESSAGES" Grid.Column="1" Grid.Row="1" HorizontalOptions="StartAndExpand" VerticalOptions="Center" TextColor="#869BA4" Padding="5,5" FontSize="10"/>
+                        <Label Text="+" Grid.Column="1" Grid.Row="1" HorizontalOptions="End" VerticalOptions="Center" TextColor="#869BA4" Padding="5,5" FontSize="10"/>
+                    </StackLayout>
+
+
+                </StackLayout>
+
+            </ScrollView>
+
+        </Grid>
+        <!-- Left Middle panel which displays Friends, Message Requests .etc -->
+
+        
+        <!-- UserIconBar -->
+        <Grid Grid.Row="2" Grid.Column="0" BackgroundColor="#232428">
+            <!-- One Row -->
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*" />
+            </Grid.RowDefinitions>
+
+            <!-- One columns -->
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- inner profile grid-->
+            <Grid Grid.Row="0" Grid.Column="0" BackgroundColor="#232428">
+                <!-- One Row -->
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="1*" />
+                </Grid.RowDefinitions>
+
+                <!-- One columns -->
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="3*" />
+                </Grid.ColumnDefinitions>
+
+                <Label Text="Sincel" Grid.Column="1" Grid.Row="0" HorizontalOptions="Start" VerticalOptions="End" TextColor="White"/>
+                <Label Text="Sincel" Grid.Column="1" Grid.Row="1" HorizontalOptions="Start" VerticalOptions="Start" TextColor="#B5BAC1" FontSize="12"/>
+            </Grid>
+            <!-- inner profile grid-->
+        </Grid>
+        <!-- UserIconBar -->
+
+    </Grid>
+    
+    
+</ContentView>

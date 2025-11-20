@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="messanger.MainApplication"
+             xmlns:local="clr-namespace:messanger.Screens"
+             Title="MainApplication"
+             Shell.NavBarIsVisible="False">
+    
+    
+    
+    
+    
+    
+    
+    <Grid BackgroundColor="LightGray">
+        <!-- Grid Definitions -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*" />
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="70" />
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+
+
+
+        <!-- Main display Screen selector-->    
+        <local:AlternativeView Grid.Row="0" Grid.Column="1"/>
+        <!-- Main display Screen selector-->
+
+
+        <!-- server selector -->
+        <Grid Grid.Row="0" Grid.Column="0" BackgroundColor="#1e1f22">
+            <!-- One Row -->
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="15*" />
+            </Grid.RowDefinitions>
+
+            <!-- One columns -->
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                
+            </Grid.ColumnDefinitions>
+
+            <BoxView HeightRequest="1" Grid.Row="1" BackgroundColor="#282a2e" VerticalOptions="Start" Margin="10,0" />
+        </Grid>
+        <!-- server selector -->
+
+
+
+    </Grid>
+</ContentPage>
